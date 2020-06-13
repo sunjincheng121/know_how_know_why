@@ -7,8 +7,10 @@ import org.apache.flink.table.api.java.StreamTableEnvironment;
 
 public class ProducerTestData {
     public static void main(String[] args) throws Exception {
+        // Correct to your local path.
         String sourceData = "file:///Users/jincheng.sunjc/work/know_how_know_why/QA/v110/discover-idle-sources/src/main/java/qa/kafka/id_cnt_data.csv";
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setParallelism(1);
         env.enableCheckpointing(1000, CheckpointingMode.AT_LEAST_ONCE);
 
         // using blink planner due to https://issues.apache.org/jira/browse/FLINK-16693

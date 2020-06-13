@@ -1,6 +1,8 @@
 package qa;
 
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.CheckpointingMode;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.table.api.EnvironmentSettings;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
@@ -13,10 +15,10 @@ import java.util.Map;
  */
 public class DiscoverIdlePartition {
     public static void main(String[] args) throws Exception {
-        // with idle check
-        StreamExecutionEnvironment env = createEnv(true);
-        // without idle check
-//        env = createEnv(false);
+        // with idle check， 7 output
+//        StreamExecutionEnvironment env = createEnv(true);
+        // without idle check, 4 output
+        StreamExecutionEnvironment env = createEnv(false);
 
 
         // using blink blanner due to https://issues.apache.org/jira/browse/FLINK-16693
@@ -27,7 +29,7 @@ public class DiscoverIdlePartition {
                 "  id VARCHAR," +
                 "  cnt INT, " +
                 "  ts TIMESTAMP(3)," +
-                "  WATERMARK FOR ts AS ts - INTERVAL '20' SECOND" +
+                "  WATERMARK FOR ts AS ts - INTERVAL '0' SECOND" +
                 ") WITH (" +
                 "'connector.type' = 'kafka'," +
                 "'connector.version' = '0.10'," +
@@ -56,7 +58,7 @@ public class DiscoverIdlePartition {
         tEnv.sqlUpdate(sinkDDL);
 
         String sql = "INSERT INTO jdbcSink " +
-                "SELECT id, TUMBLE_START(ts, INTERVAL '5' SECOND), sum(cnt) as cnt " +
+                "SELECT id, TUMBLE_START(ts, INTERVAL '5' SECOND), count(cnt) as cnt " +
                 "FROM kafkaSource " +
                 "GROUP BY id, TUMBLE(ts, INTERVAL '5' SECOND)";
 
@@ -67,12 +69,14 @@ public class DiscoverIdlePartition {
 
     private static StreamExecutionEnvironment createEnv(boolean idleCheck) throws Exception{
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.enableCheckpointing(1000, CheckpointingMode.AT_LEAST_ONCE);
         if(idleCheck) {
             Map<String, String> args = new HashMap<>();
             args.put("source.idle.timeout.ms", "5000");
             env.getConfig().setGlobalJobParameters(ParameterTool.fromMap(args));
         }
-        env.setParallelism(1);
+        env.setParallelism(2);
         return env;
     }
 
@@ -96,5 +100,3 @@ public class DiscoverIdlePartition {
         tEnv.sqlUpdate(sql);
     }
 }
-
-
