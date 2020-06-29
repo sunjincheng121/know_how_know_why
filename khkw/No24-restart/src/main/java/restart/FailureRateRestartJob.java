@@ -31,7 +31,7 @@ public class FailureRateRestartJob {
 
        env.setRestartStrategy(
                RestartStrategies.failureRateRestart(
-                       5, Time.of(5, TimeUnit.MINUTES), Time.of(5, TimeUnit.SECONDS)));
+                       5, Time.of(5, TimeUnit.SECONDS), Time.of(5, TimeUnit.SECONDS)));
 
         DataStream<Tuple3<String, Integer, Long>> source = env
                 .addSource(new SourceFunction<Tuple3<String, Integer, Long>>() {

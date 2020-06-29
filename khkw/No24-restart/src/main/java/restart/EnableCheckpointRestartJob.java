@@ -33,7 +33,6 @@ public class EnableCheckpointRestartJob {
                         int index = 1;
                         while(true){
                             ctx.collect(new Tuple3<>("key", index++, System.currentTimeMillis()));
-                            // Just for testing
                             Thread.sleep(100);
                         }
                     }
