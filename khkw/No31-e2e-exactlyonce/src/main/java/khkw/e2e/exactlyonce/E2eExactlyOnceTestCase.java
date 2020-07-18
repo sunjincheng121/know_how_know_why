@@ -41,10 +41,10 @@ public class E2eExactlyOnceTestCase {
         env.setRestartStrategy(
                 RestartStrategies.fixedDelayRestart(3, Time.of(1, TimeUnit.MILLISECONDS) ));
 
-        atMostOnce(env);
+//        atMostOnce(env);
 //        atLeastOnce(env);
 //        exactlyOnce(env);
-//        exactlyOnce2(env);
+        exactlyOnce2(env);
 //        e2eExactlyOnce(env);
 
         env.execute("E2e-Exactly-Once");
@@ -98,7 +98,7 @@ public class E2eExactlyOnceTestCase {
 
     private static void e2eExactlyOnce(StreamExecutionEnvironment env) {
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        baseLogic(env).addSink(new E2EExactlyOnceSinkFunction());
+        baseLogic(env).addSink(new E2EExactlyOnceSinkFunction()).name("E2E-ExactlyOnceSink");
     }
 
     private static KeyedStream<Tuple3<String, Long, String>, String> baseLogic(StreamExecutionEnvironment env) {
