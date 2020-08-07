@@ -86,6 +86,7 @@ public class ParallelCheckpointedSourceRestoreFromTaskIndex
                 LOG.error(String.format("Current Task index[%d], Restore from offset [%d]", indexOfThisTask, offset));
             }
         }
+
     }
 
     @Override
