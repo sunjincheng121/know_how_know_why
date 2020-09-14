@@ -1,0 +1,17 @@
+version: '2'
+services:
+    mysql:
+      image: mysql:5.7
+      container_name: mysql
+      volumes:
+        - ~/mysql/data/db:/var/lib/mysql/
+        - ~/mysql/mysql-3346.sock:/var/run/mysql.sock
+        - ~/mysql/data/conf:/etc/mysql/conf.d
+      ports:
+        - 3306:3306
+      command:
+        --default-authentication-plugin=mysql_native_password
+        --lower_case_table_names=1
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+        TZ: Asia/Shanghai
