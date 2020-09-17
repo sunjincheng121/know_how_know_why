@@ -1,0 +1,11 @@
+version: '2'
+services:
+  iotdb:
+    container_name: iotdb
+    image: apache/iotdb:0.10.1
+    volumes:
+      - /Users/jincheng.sunjc/work/iotdb_work/data:/opt/data
+    ports:
+      - "4000:8181"
+    environment:
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
