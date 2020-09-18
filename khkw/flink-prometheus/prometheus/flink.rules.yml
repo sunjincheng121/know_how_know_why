@@ -1,0 +1,9 @@
+---
+groups:
+  - name: flink
+    rules:
+      - alert: FlinkTaskManagerMissing
+        expr: count(flink_taskmanager_Status_JVM_CPU_Time) < 2
+        for: 1m
+        annotations:
+          summary: Fewer Flink TaskManagers than expected are running.

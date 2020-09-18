@@ -1,0 +1,58 @@
+version: '2.1'
+
+networks:
+  monitor:
+    driver: bridge
+
+services:
+   jobmanager:
+     container_name: jobmanager
+     image: khkw/flink_prometheus:1.11.2
+     volumes:
+       - ~/flinkDeploy:/opt/flinkDeploy
+     hostname: "jobmanager"
+     expose:
+       - "6123"
+     ports:
+       - "4000:4000"
+       - "9249:9249"
+     environment:
+       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+     command: jobmanager
+   taskmanager:
+     container_name: taskmanager
+     hostname: "taskmanager"
+     image: khkw/flink_prometheus:1.11.2
+     volumes:
+       - ~/flinkDeploy:/opt/flinkDeploy
+     expose:
+       - "6121"
+       - "6122"
+     ports:
+       - "9250:9249"
+     depends_on:
+       - jobmanager
+     links:
+       - jobmanager:jobmanager
+     environment:
+       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+     command: taskmanager
+   prometheus:
+     image: prom/prometheus:v2.19.1
+     container_name: prometheus
+     ports:
+       - "9090:9090"
+     volumes:
+       - ~/flinkDeploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+       - ~/flinkDeploy/prometheus/flink.rules.yml:/etc/prometheus/flink.rules.yml
+     networks:
+       - monitor
+   grafana:
+      image: grafana/grafana:6.1.3
+      container_name: grafana
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_PASSWORD=flink
+      networks:
+        - monitor
