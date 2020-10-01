@@ -27,6 +27,7 @@ RUN set -ex; \
   echo "rest.port: 4000" >> /opt/flink/conf/flink-conf.yaml; \
   echo "metrics.reporters: prom" >> /opt/flink/conf/flink-conf.yaml; \
   echo "metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter" >> /opt/flink/conf/flink-conf.yaml; \
-  cp /opt/flink/plugins/metrics-prometheus/flink-metrics-prometheus-1.11.2.jar /opt/flink/lib/
+  echo "metrics.reporter.prom.port: 9249,9250" >> /opt/flink/conf/flink-conf.yaml
+
 
 WORKDIR /opt/flink

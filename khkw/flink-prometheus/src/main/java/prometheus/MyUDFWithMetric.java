@@ -17,15 +17,16 @@ public class MyUDFWithMetric extends ScalarFunction {
     private transient Histogram valueHistogram;
 
     public void open(FunctionContext context) throws Exception {
-        eventCounter = context.getMetricGroup().counter("events");
+        eventCounter = context.getMetricGroup().counter("udf_events");
         valueHistogram = context
                 .getMetricGroup()
-                .histogram("value_histogram", new DescriptiveStatisticsHistogram(10_000));
+                .histogram("udf_value_histogram", new DescriptiveStatisticsHistogram(10_000));
 
     }
 
     public Integer eval(Integer event) {
         eventCounter.inc();
+        System.out.println(String.format("udf_events[%d]", eventCounter.getCount()));
         valueHistogram.update(event);
         return event;
     }

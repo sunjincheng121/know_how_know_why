@@ -1,0 +1,9 @@
+mvn archetype:generate \
+    -DarchetypeGroupId=org.apache.flink \
+    -DarchetypeArtifactId=flink-walkthrough-datastream-java \
+    -DarchetypeVersion=1.11.1 \
+    -DgroupId=khkw \
+    -DartifactId=No45-SQL-Architecture \
+    -Dversion=0.1 \
+    -Dpackage=architecture \
+    -DinteractiveMode=false

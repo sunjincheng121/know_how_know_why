@@ -35,7 +35,8 @@ import static org.apache.flink.table.api.Expressions.call;
  *   bin/flink run /opt/flinkDeploy/flink-prometheus-0.1.jar -d
  *  10.如果一切正常查看print数据
  *  docker logs --since 30m 《CONTAINER—ID》
- *  11.查看和配置Prometheus&grafana ：）
+ *  11.查看和配置Prometheus
+ *  & grafana ：）
  *
  *
  *
