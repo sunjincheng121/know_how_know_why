@@ -1,0 +1,10 @@
+T__0=1
+DESC=2
+POWER=3
+OPEN=4
+APACHE=5
+WS=6
+'IoTDB'=1
+'is Powerful'=3
+'is Open Source'=4
+'is Apache Project'=5
