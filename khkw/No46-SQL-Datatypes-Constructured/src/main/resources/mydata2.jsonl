@@ -1,0 +1,23 @@
+{
+    "ts":1238123899121,
+    "name":"khkw",
+    "b_date":"1990-10-14",
+    "tag":"true",
+    "strings":[
+        "one",
+        "two",
+        "three"
+    ],
+    "obj_map":{
+        "mkey1":"mvalue1",
+        "mkey2":"mvalue2"
+    },
+    "obj_set":{
+        "svalue0":0,
+        "svalue1":1
+    },
+    "obj_row":{
+        "booleanField":true,
+        "intField":12
+    }
+}
