@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>khkw</groupId>
-  <artifactId>No46-SQL-Datatypes-Constructured</artifactId>
+  <artifactId>No52-Ser-DeSer</artifactId>
   <name>Flink Walkthrough DataStream Java</name>
   <version>0.1</version>
   <url>https://flink.apache.org</url>
@@ -47,6 +47,43 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+              <configuration>
+                <artifactSet>
+                  <excludes>
+                    <exclude>org.apache.flink:force-shading</exclude>
+                    <exclude>com.google.code.findbugs:jsr305</exclude>
+                    <exclude>org.slf4j:*</exclude>
+                    <exclude>log4j:*</exclude>
+                  </excludes>
+                </artifactSet>
+                <filters>
+                  <filter>
+                    <artifact>*:*</artifact>
+                    <excludes>
+                      <exclude>META-INF/*.SF</exclude>
+                      <exclude>META-INF/*.DSA</exclude>
+                      <exclude>META-INF/*.RSA</exclude>
+                    </excludes>
+                  </filter>
+                </filters>
+                <transformers>
+                  <transformer>
+                    <mainClass>khkw.WordCount</mainClass>
+                  </transformer>
+                </transformers>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -54,8 +91,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
+          <source>9</source>
+          <target>9</target>
         </configuration>
       </plugin>
       <plugin>
@@ -99,9 +136,7 @@
   </build>
   <properties>
     <scala.binary.version>2.11</scala.binary.version>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
     <java.version>1.8</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <log4j.version>2.12.1</log4j.version>
     <flink.version>1.13.1</flink.version>
