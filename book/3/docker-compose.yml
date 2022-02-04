@@ -1,0 +1,11 @@
+version: '2'
+services:
+    web:
+        container_name: web
+        image: httpd
+        ports:
+            - "8080:80"
+        privileged: true
+        volumes:
+            - "./web/:/usr/local/apache2/htdocs/"
+           
