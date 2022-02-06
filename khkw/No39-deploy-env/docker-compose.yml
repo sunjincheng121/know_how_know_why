@@ -1,63 +1,61 @@
 version: '2'
 services:
-   jobmanager:
-     image: khkw/flink:1.11.1
-     volumes:
+    jobmanager:
+      image: khkw/flink:1.11.1
+      volumes:
        - ~/flinkDeploy:/opt/flinkDeploy
-     hostname: "jobmanager"
-     expose:
+      hostname: "jobmanager"
+      expose:
        - "6123"
-     ports:
+      ports:
        - "4000:4000"
-     command: jobmanager
-     environment:
+      command: jobmanager
+      environment:
        - JOB_MANAGER_RPC_ADDRESS=jobmanager
-   taskmanager:
-     image: khkw/flink:1.11.1
-     volumes:
+    taskmanager:
+      image: khkw/flink:1.11.1
+      volumes:
        - ~/flinkDeploy:/opt/flinkDeploy
-     expose:
+      expose:
        - "6121"
        - "6122"
-     depends_on:
+      depends_on:
        - jobmanager
-     command: taskmanager
-     links:
+      command: taskmanager
+      links:
        - jobmanager:jobmanager
-     environment:
+      environment:
        - JOB_MANAGER_RPC_ADDRESS=jobmanager
-  zookeeper:
-    container_name: zookeeper
-    image: zookeeper:3.6.1
-    ports:
-      - "2181:2181"
-  kafka:
-    container_name: kafka
-    image: wurstmeister/kafka:2.12-2.5.0
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - "9092:9092"
-    depends_on:
-      - zookeeper
-    environment:
-      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
-      KAFKA_CREATE_TOPICS: "payment_msg:1:1"
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
-     KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-   mysql:
-     image: mysql:5.7
-     container_name: mysql
-     volumes:
+    zookeeper:
+      container_name: zookeeper
+      image: zookeeper:3.6.1
+      ports:
+       - "2181:2181"
+    kafka:
+      container_name: kafka
+      image: wurstmeister/kafka:2.12-2.5.0
+      volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+      ports:
+       - "9092:9092"
+      depends_on:
+       - zookeeper
+      environment:
+       HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+       KAFKA_CREATE_TOPICS: "payment_msg:1:1"
+       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    mysql:
+      image: mysql:5.7
+      container_name: mysql
+      volumes:
        - ~/mysql/data/db:/var/lib/mysql/
        - ~/mysql/mysql-3346.sock:/var/run/mysql.sock
        - ~/mysql/data/conf:/etc/mysql/conf.d
-     ports:
+      ports:
        - 3306:3306
-     command:
+      command:
        --default-authentication-plugin=mysql_native_password
        --lower_case_table_names=1
-     environment:
+      environment:
        MYSQL_ROOT_PASSWORD: 123456
        TZ: Asia/Shanghai
